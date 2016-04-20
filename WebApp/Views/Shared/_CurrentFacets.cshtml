@@ -1,0 +1,11 @@
+﻿@model SearchFacetsHelper
+
+@if(Model.Selections.Count > 0)
+{
+    foreach(var selection in Model.Selections)
+    {
+        <text>@selection.Name @selection.Value</text> <a href="javascript:void(0)" onclick="RemoveFacet('@selection.Name','@selection.Value');"><span class="glyphicon glyphicon-remove-circle"></span></a><br />
+    }
+}
+
+

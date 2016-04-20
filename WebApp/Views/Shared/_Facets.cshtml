@@ -1,0 +1,29 @@
+﻿@model Microsoft.Azure.Search.Models.FacetResults
+
+@foreach(var facet in Model)
+{
+    <div class="form-group">
+        <h6>@facet.Key</h6>
+        <ul>
+            @{
+                IList<Microsoft.Azure.Search.Models.FacetResult> results = facet.Value;
+                foreach (var r in results)
+                {
+                    if (r.To != null || r.From != null)
+                    {
+                        var from = r.From ?? "0";
+                        var to = r.To ?? " and above";
+                        // Range Display
+                        <li><a href="javascript:void(0)" onclick="ChooseFacet('@facet.Key','@from');">@from to @to <span class="badge">@r.Count</span></a></li>
+                    }
+                    else
+                    {
+                        // Value Display
+                        <li><a href="javascript:void(0)" onclick="ChooseFacet('@facet.Key','@r.Value');">@r.Value <span class="badge">@r.Count</span></a></li>
+                    }
+
+                }
+            }
+        </ul>
+    </div>
+}

@@ -1,0 +1,95 @@
+﻿@model WebApp.Models.SearchViewModel
+@{
+    ViewBag.Title = "Home";
+}
+
+<div class="row">
+    <div class="col-md-3 well">
+        <form action="/home/search" id="searchform" method="post" role="form">
+            <div class="form-group">
+                <input type="text" id="q" name="q" size="50" class="form-control" value="@Model.SearchQuery" placeholder="Search by Keyword or Stock #">
+                <button type="submit" class="search-submit btn btn-warning">Search</button>
+            </div>
+            <div class="form-group">
+                <label for="yearMin">Year</label>
+                <select name="yearMin" id="yearMin" onchange="submitForm();">
+                    @for(int i = 2005; i < 2017; i++)
+                    {
+                        if (Model.YearMin == i)
+                        {
+                            <option value="@i" selected>@i</option>
+                        }
+                        else
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    }
+                </select> to <select name="yearMax" id="yearMax" onchange="submitForm();">
+                    @for (int i = 2005; i < 2017; i++)
+                    {
+                        if (Model.YearMax == i)
+                        {
+                            <option value="@i" selected>@i</option>
+                        }
+                        else
+                        {
+                            <option value="@i">@i</option>
+                        }
+                    }
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="sortType">Sort</label>
+                <select name="sortType" id="sortType" onchange="submitForm();">
+                    <option value="year" @if (Model.SortType == "year") { <text> selected</text>}>Year (Newest First)</option>
+                    <option value="make" @if (Model.SortType == "make") { <text> selected</text>}>Make (A to Z)</option>
+                    <option value="miles_low" @if (Model.SortType == "miles_low") { <text> selected</text>}>Miles (Low to High)</option>
+                    <option value="miles_high" @if (Model.SortType == "miles_high") { <text> selected</text>}>Miles (High to Low)</option>
+                    <option value="mpgcity" @if (Model.SortType == "mpgcity") { <text> selected</text>}>MPG City</option>
+                    <option value="mpghighway" @if (Model.SortType == "mpghighway") { <text> selected</text>}>MPG Highway</option>
+                </select>
+            </div>
+            <hr />
+            @Html.Partial("_CurrentFacets", Model.FacetHelper)
+            <hr />
+            @Html.Partial("_Facets", Model.Facets)
+            <hr />
+            <div class="form-group">
+                <label>Current Facets:</label>
+                <input type="text" name="currentFacets" id="currentFacets" value="@Model.CurrentFacets" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label>Current page:</label>
+                <input type="text" name="currentPage" id="currentPage" value="@Model.CurrentPage" class="form-control" />
+            </div>
+            <input type="hidden" name="facettoremove" id="facettoremove" value="" />
+        </form>
+    </div>
+    <div class="col-md-9">        
+        <h3>@Model.Count Results Found</h3>
+        <div id="results_details_div">
+            @foreach(var m in Model.Results)
+            {
+                <div class="well well-yellow">  
+                    <div class="row">
+                        <div class="col-md-3">
+                            <img src="~/ComingSoonImage.jpg" class="text-left" />
+                        </div>
+                        <div class="col-md-6">
+                            
+                            <h3>@m.Document.Year @m.Document.Make @m.Document.Model</h3>
+                            <ul>
+                                <li>Stock Number: @m.Document.StockNumber</li>
+                                <li>Miles: @m.Document.Miles</li>
+                                <li>Store: @m.Document.StoreNumber</li>
+                            </ul>
+                        </div>
+                    </div>                                                          
+                </div>
+            }
+        </div>
+        <div class="clearfix">
+            <ul id="paginationFooter" class="pagination pull-right"></ul>
+        </div>
+    </div>
+</div>
